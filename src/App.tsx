@@ -1,29 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import menuData from './menu-data.json';
+import React from "react";
+import { Switch, Route, BrowserRouter, NavLink } from "react-router-dom";
 
-console.log('Menu Data');
-console.log(menuData);
+import { Menu } from "./pages/Menu/Menu";
+import { MenuItem } from "./pages/MenuItem/MenuItem";
+import { getMenuItem } from "./data/utils";
+
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div>
+        <div>
+          <NavLink to="/">All items</NavLink>
+        </div>
+        <div>
+          <Switch>
+            <Route
+              exact
+              path="/item/:itemId"
+              render={(routeProps) => {
+                const item = getMenuItem(routeProps.match.params.itemId);
+                if (!item) {
+                  return <div>Menu item not found</div>;
+                }
+
+                return <MenuItem item={item} />;
+              }}
+            />
+            <Route path="/" component={Menu} />
+          </Switch>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
